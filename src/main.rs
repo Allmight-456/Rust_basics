@@ -1,47 +1,56 @@
-// Some rules of ownership and borrow in RUST 
-//Ownership Rules:
-// a. Each value in Rust has a variable that's called its owner.
-// b. There can only be one owner at a time.
-// c. When the owner goes out of scope, the value will be dropped.
-// Borrowing Rules:
-// a. At any given time, you can have either one mutable reference or any number of immutable references.
-// b. References must always be valid.
-
-fn main() {
-    let s1 = String::from("hello"); // s1 owns the String
-    let s2 = s1; // ownership is moved from s1 to s2
-    // println!("{}", s1); // This would cause an error - s1 no longer owns the String
-    println!("{}", s2); // This is fine
-} // s2 goes out of scope and the String is dropped
-
-#[allow(dead_code)]            // to remind the compiler that function is not used
-fn ownership() {
-    let mut s = String::from("hello");
-
-    // Immutable borrowing
-    let r1 = &s; // OK
-    let r2 = &s; // OK - multiple immutable borrows are allowed
-    println!("{} and {}", r1, r2);
-    // r1 and r2 are no longer used after this point
-
-    // Mutable borrowing
-    let r3 = &mut s; // OK - mutable borrow
-    // let r4 = &s; // This would be an ERROR - can't borrow as immutable while mutably borrowed
-    println!("{}", r3);
+// Clone ,Copy , Structs
+#[derive(Copy, Clone)]             //It's a way to automatically generate implementations 
+                                   //of certain traits for your structs or enums.
+struct Rectangle {
+    width: u32,
+    height: u32,
 }
 
+impl Rectangle {
+    // This is optional but often useful
+    fn new(width: u32, height: u32) -> Rectangle {
+        Rectangle { width, height }
+    }
+
+    fn area(&self) -> u32 {
+        self.width * self.height  // Implicit return ,without ; by default the last expression is returned
+    }
+
+    fn perimeter(&self) -> u32 {
+        return 2 * (self.width + self.height);  // Explicit return
+        // 2 * (self.width + self.height)
+    }
+}
+
+fn main() {
+    // Using new
+    let rect1 = Rectangle::new(30, 50);
+    
+    // Direct instantiation
+    let rect2 = Rectangle { width: 10, height: 20 };
+
+    println!("Area of rect1: {}", rect1.area());
+    println!("Perimeter of rect2: {}", rect2.perimeter());
+
+    // Copy in action
+    let rect3 = rect1;  // rect1 is copied, not moved because of [derive(Copy,Clone)]
+    println!("Area of rect1 (still accessible): {}", rect1.area());
+    println!("Area of rect3: {}", rect3.area());
+}
+
+
 #[allow(dead_code)]
-fn borrowing() {
-    let mut s = String::from("hello");
-
-    // Immutable borrowing
-    let r1 = &s; // OK
-    let r2 = &s; // OK - multiple immutable borrows are allowed
-    println!("{} and {}", r1, r2);
-    // r1 and r2 are no longer used after this point
-
-    // Mutable borrowing
-    let r3 = &mut s; // OK - mutable borrow
-    // let r4 = &s; // This would be an ERROR - can't borrow as immutable while mutably borrowed
-    println!("{}", r3);
+//clone trait in rust needs to be generated
+#[derive(Clone)]
+struct Person {
+    name: String,
+    age: u32,
+}
+#[allow(dead_code)]
+fn clone() {
+    let p1 = Person { name: String::from("Alice"), age: 30 };
+    let p2 = p1.clone();
+    
+    println!("{} is {} years old", p1.name, p1.age);
+    println!("{} is {} years old", p2.name, p2.age);
 }

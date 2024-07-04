@@ -1,3 +1,7 @@
+//To run a rust file , Compile=> rustc path_to_FIle/file.rs
+// Run => ./file
+
+
 // conditional loops in Rust
 // To uncomment any area => cmd + /    or   ctrl + /  
 

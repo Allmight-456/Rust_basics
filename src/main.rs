@@ -1,41 +1,47 @@
-//Stack and heap concept in Rust
-//stacks are used for immutable objects  , are faster
-// Heaps are mostly for mutable capacity and not determinable capacity and other scenarios as well
+// Some rules of ownership and borrow in RUST 
+//Ownership Rules:
+// a. Each value in Rust has a variable that's called its owner.
+// b. There can only be one owner at a time.
+// c. When the owner goes out of scope, the value will be dropped.
+// Borrowing Rules:
+// a. At any given time, you can have either one mutable reference or any number of immutable references.
+// b. References must always be valid.
 
-fn main(){
-    stack_function();
-    heap_function();
-    update_string();
-    
+fn main() {
+    let s1 = String::from("hello"); // s1 owns the String
+    let s2 = s1; // ownership is moved from s1 to s2
+    // println!("{}", s1); // This would cause an error - s1 no longer owns the String
+    println!("{}", s2); // This is fine
+} // s2 goes out of scope and the String is dropped
+
+#[allow(dead_code)]            // to remind the compiler that function is not used
+fn ownership() {
+    let mut s = String::from("hello");
+
+    // Immutable borrowing
+    let r1 = &s; // OK
+    let r2 = &s; // OK - multiple immutable borrows are allowed
+    println!("{} and {}", r1, r2);
+    // r1 and r2 are no longer used after this point
+
+    // Mutable borrowing
+    let r3 = &mut s; // OK - mutable borrow
+    // let r4 = &s; // This would be an ERROR - can't borrow as immutable while mutably borrowed
+    println!("{}", r3);
 }
 
-fn stack_function(){
-    let a=20;
-    let b=10;
-    let c = a+b;
-    println!("Stack function : Sum of a :{} and  b :{} is c :{}",a ,b,c);
-}
+#[allow(dead_code)]
+fn borrowing() {
+    let mut s = String::from("hello");
 
-fn heap_function(){
-    let s1 = String::from("Polo");
-    let s2 = String::from("Singh");
-    let combined = format!("{} {}",s1,s2);
-    println!("Heap function when combined says : {}", combined);
-}
-fn update_string(){
-    let mut s= String::from("Intially called polo");
-    println!("{}",s);
-    s.push_str(" ,Now known as Shabdansh ");
-    println!("{}",s);
+    // Immutable borrowing
+    let r1 = &s; // OK
+    let r2 = &s; // OK - multiple immutable borrows are allowed
+    println!("{} and {}", r1, r2);
+    // r1 and r2 are no longer used after this point
 
-    //this is part where all three values that are stored in Stack to locate heap is given
-    // we will see How Pointer , length  and Capacity are influenced .
-    
-    println!("Length : {}  Capacity:{}  Pointer:{:p}",s.len(),s.capacity(),s.as_ptr());
-
-    for _i in 0..10{
-        s.push_str("and some additional text");
-        println!("After push => Length : {}  Capacity:{}  Pointer:{:p}",s.len(),s.capacity(),s.as_ptr());
-    }
-    
+    // Mutable borrowing
+    let r3 = &mut s; // OK - mutable borrow
+    // let r4 = &s; // This would be an ERROR - can't borrow as immutable while mutably borrowed
+    println!("{}", r3);
 }

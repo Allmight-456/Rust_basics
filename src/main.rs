@@ -1,56 +1,32 @@
-// Clone ,Copy , Structs
-#[derive(Copy, Clone)]             //It's a way to automatically generate implementations 
-                                   //of certain traits for your structs or enums.
-struct Rectangle {
-    width: u32,
-    height: u32,
+enum Shape {
+    Circle(f64),
+    Rectangle(f64, f64),
+    Square(f64),
 }
 
-impl Rectangle {
-    // This is optional but often useful
-    fn new(width: u32, height: u32) -> Rectangle {
-        Rectangle { width, height }
+impl Shape {
+    fn area(&self) -> f64 {
+        match self {
+            Shape::Circle(radius) => std::f64::consts::PI * radius * radius,
+            Shape::Rectangle(length, breadth) => length * breadth,
+            Shape::Square(side) => side * side,
+        }
     }
-
-    fn area(&self) -> u32 {
-        self.width * self.height  // Implicit return ,without ; by default the last expression is returned
-    }
-
-    fn perimeter(&self) -> u32 {
-        return 2 * (self.width + self.height);  // Explicit return
-        // 2 * (self.width + self.height)
+    fn perimeter(&self)-> f64 {
+        match self {
+            Shape::Circle(radius) => 2.0 * std::f64::consts::PI * radius,        // add .0 to integers to make it float
+            Shape::Rectangle(length, breadth) => 2.0* (length + breadth),
+            Shape::Square(side) => 4.0 * side,
+        }
     }
 }
 
-fn main() {
-    // Using new
-    let rect1 = Rectangle::new(30, 50);
-    
-    // Direct instantiation
-    let rect2 = Rectangle { width: 10, height: 20 };
+fn main(){
+    let circle = Shape::Circle(5.00);
+    let rectangle = Shape::Rectangle(4.00,6.00);
+    let square = Shape::Square(3.00);
 
-    println!("Area of rect1: {}", rect1.area());
-    println!("Perimeter of rect2: {}", rect2.perimeter());
-
-    // Copy in action
-    let rect3 = rect1;  // rect1 is copied, not moved because of [derive(Copy,Clone)]
-    println!("Area of rect1 (still accessible): {}", rect1.area());
-    println!("Area of rect3: {}", rect3.area());
-}
-
-
-#[allow(dead_code)]
-//clone trait in rust needs to be generated
-#[derive(Clone)]
-struct Person {
-    name: String,
-    age: u32,
-}
-#[allow(dead_code)]
-fn clone() {
-    let p1 = Person { name: String::from("Alice"), age: 30 };
-    let p2 = p1.clone();
-    
-    println!("{} is {} years old", p1.name, p1.age);
-    println!("{} is {} years old", p2.name, p2.age);
+    println!("Area of Circle is : {} and perimeter is {:.2}", circle.area(),circle.perimeter());         // :.2 to give floating values upto two decimal places 
+    println!("Area of Rectangle is : {} and perimeter is {:.2}", rectangle.area(),rectangle.perimeter());
+    println!("Area of Square is : {} and perimeter is {:.2}", square.area(),square.perimeter());
 }

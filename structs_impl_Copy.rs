@@ -1,11 +1,14 @@
 // Clone ,Copy , Structs
 #[derive(Copy, Clone)]             //It's a way to automatically generate implementations 
                                    //of certain traits for your structs or enums.
+
+//Custom data types that group related data. 
 struct Rectangle {
     width: u32,
     height: u32,
 }
 
+// A way to define methods for structs or enums.
 impl Rectangle {
     // This is optional but often useful
     fn new(width: u32, height: u32) -> Rectangle {
